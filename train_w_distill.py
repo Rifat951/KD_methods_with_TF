@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from tensorflow import ConfigProto
+import tensorflow.compat.v1 as ConfigProto
 
 import time, os
 import scipy.io as sio
