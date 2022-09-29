@@ -27,19 +27,19 @@ def Factor_Transfer(sfm, tfm):
     '''
     def Factor_transfer(X, rate, scope, reuse = False):
         with tf.variable_scope(scope):
-            with tf.contrib.framework.arg_scope([tf.contrib.layers.conv2d, tf.contrib.layers.conv2d_transpose], weights_regularizer=None,
+            with tf.compat.v1.framework.arg_scope([tf.contrib.layers.conv2d, tf.contrib.layers.conv2d_transpose], weights_regularizer=None,
                                                 variables_collections = [tf.GraphKeys.GLOBAL_VARIABLES, 'Para']):
                 D = tfm.get_shape().as_list()[-1]
-                conv = tf.contrib.layers.conv2d(X,    int(D*rate**1), [3,3], 1,          scope='conv0', reuse = reuse)
-                conv = tf.contrib.layers.conv2d(conv, int(D*rate**2), [3,3], int(1/rate),scope='conv1', reuse = reuse)
-                conv = tf.contrib.layers.conv2d(conv, int(D*rate**3), [3,3], 1, activation_fn = None, scope='conv2', reuse = reuse)
+                conv = tf.compat.v1.layers.conv2d(X,    int(D*rate**1), [3,3], 1,          scope='conv0', reuse = reuse)
+                conv = tf.compat.v1.layers.conv2d(conv, int(D*rate**2), [3,3], int(1/rate),scope='conv1', reuse = reuse)
+                conv = tf.compat.v1.layers.conv2d(conv, int(D*rate**3), [3,3], 1, activation_fn = None, scope='conv2', reuse = reuse)
                 
-                if reuse:
+                if reus:
                     return tf.nn.l2_normalize(conv, -1)
                 conv = tf.nn.leaky_relu(conv)
-                deconv = tf.contrib.layers.conv2d_transpose(conv,   int(D*rate**2), [3,3], 1,          scope='convt0', reuse = reuse)
-                deconv = tf.contrib.layers.conv2d_transpose(deconv, int(D*rate**1), [3,3], int(1/rate),scope='convt1', reuse = reuse)
-                deconv = tf.contrib.layers.conv2d_transpose(deconv, D, [3,3], 1,  scope='convt2', reuse = reuse)
+                deconv = tf.compat.v1.layers.conv2d_transpose(conv,   int(D*rate**2), [3,3], 1,          scope='convt0', reuse = reuse)
+                deconv = tf.compat.v1.layers.conv2d_transpose(deconv, int(D*rate**1), [3,3], int(1/rate),scope='convt1', reuse = reuse)
+                deconv = tf.compat.v1.layers.conv2d_transpose(deconv, D, [3,3], 1,  scope='convt2', reuse = reuse)
                 return deconv
 
     with tf.variable_scope('Factor_Transfer'):
@@ -53,8 +53,8 @@ def Factor_Transfer(sfm, tfm):
 
             with tf.variable_scope('Translator'):
                 D = tfm.get_shape().as_list()[-1]
-                conv = tf.contrib.layers.conv2d(sfm,  int(D*rate**1), [3,3], 1,          scope='conv0')
-                conv = tf.contrib.layers.conv2d(conv, int(D*rate**2), [3,3], int(1/rate),scope='conv1')
-                conv = tf.contrib.layers.conv2d(conv, int(D*rate**3), [3,3], 1, activation_fn = None, scope='conv2')
+                conv = tf.compat.v1.layers.conv2d(sfm,  int(D*rate**1), [3,3], 1,          scope='conv0')
+                conv = tf.compat.v1.layers.conv2d(conv, int(D*rate**2), [3,3], int(1/rate),scope='conv1')
+                conv = tf.compat.v1.layers.conv2d(conv, int(D*rate**3), [3,3], 1, activation_fn = None, scope='conv2')
                 F_S = tf.nn.l2_normalize(conv, -1)
             return tf.reduce_mean(tf.reduce_mean(tf.abs(F_T-F_S),[1,2,3]))
