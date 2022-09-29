@@ -29,7 +29,7 @@ def Attention_transfer(student, teacher, beta = 1e3):
             Dt = target.get_shape().as_list()[-1]
             if Ds != Dt:
                 with tf.variable_scope('Map'):
-                    source = tf.contrib.layers.fully_connected(source, Ds, biases_initializer = None, trainable=True, scope = 'fc')
+                    source = tf.compat.v1.layers.fully_connected(source, Ds, biases_initializer = None, trainable=True, scope = 'fc')
             
             Qt = tf.reduce_mean(tf.square(source),-1)
             Qt = tf.nn.l2_normalize(Qt, [1,2])
@@ -50,8 +50,8 @@ def AB_distillation(student, teacher, margin=1., weight = 3e-3):
         with tf.variable_scope('criterion_alternative_L2'):
             Dt = target.get_shape().as_list()[-1]
             with tf.variable_scope('Map'):
-                source = tf.contrib.layers.conv2d(source, Dt, [1, 1], biases_initializer = None, trainable=True, scope = 'connector%d' % (num))
-                source = tf.contrib.layers.batch_norm(source, scope='connector_bn%d' %num, is_training=True, trainable = True, activation_fn = None)
+                source = tf.compat.v1.layers.conv2d(source, Dt, [1, 1], biases_initializer = None, trainable=True, scope = 'connector%d' % (num))
+                source = tf.compat.v1.layers.batch_norm(source, scope='connector_bn%d' %num, is_training=True, trainable = True, activation_fn = None)
             
             loss = tf.square(source + margin) * tf.cast(tf.logical_and(source > -margin, target <= 0.), tf.float32)\
                   +tf.square(source - margin) * tf.cast(tf.logical_and(source <= margin, target > 0.), tf.float32)
