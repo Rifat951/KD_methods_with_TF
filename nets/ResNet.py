@@ -6,8 +6,8 @@ import tensorflow as tf
 
 from nets import Response, Multiple, Shared, Relation
 
-tcf = tf.contrib.framework
-tcl = tf.contrib.layers
+tcf = tf.compat.v1.framework
+tcl = tf.compat.v1.layers
 
 def ResBlock(x, depth, stride, get_feat, name):
     with tf.variable_scope(name):
