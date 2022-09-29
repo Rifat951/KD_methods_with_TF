@@ -217,7 +217,7 @@ def MODEL(model_name, scope, weight_decay, image, label, is_training, Distillati
     loss = tf.losses.softmax_cross_entropy(label,end_points['Logits'])
     if Distillation == 'DML':
         tf.add_to_collection('teacher_class_loss',tf.losses.softmax_cross_entropy(label,end_points['Logits_tch']))
-    accuracy = tf.contrib.metrics.accuracy(tf.cast(tf.argmax(end_points['Logits'], 1), tf.int32), tf.cast(tf.argmax(label, 1),tf.int32))
+    accuracy = tf.compat.v1.estimator.metrics.accuracy(tf.cast(tf.argmax(end_points['Logits'], 1), tf.int32), tf.cast(tf.argmax(label, 1),tf.int32))
     return loss, accuracy
     
 def learning_rate_scheduler(Learning_rate, epochs, decay_point, decay_rate):
