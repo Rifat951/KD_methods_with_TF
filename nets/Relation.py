@@ -1,7 +1,7 @@
 import tensorflow as tf
 from nets import SVP
 
-tcl = tf.contrib.layers
+tcl = tf.compat.v1.estimator.layers
 
 def RKD(source, target, l = [1e2,2e2]):
     '''
