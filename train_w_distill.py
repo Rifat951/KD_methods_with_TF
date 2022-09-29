@@ -57,7 +57,7 @@ def main(_):
         
         # pre-processing
         image = pre_processing(image_ph, is_training_ph)
-        label = tf.contrib.layers.one_hot_encoding(label_ph, num_label, on_value=1.0)
+        label = tf.compat.v1.estimator.layers.one_hot_encoding(label_ph, num_label, on_value=1.0)
      
         # make global step
         global_step = tf.train.create_global_step()
